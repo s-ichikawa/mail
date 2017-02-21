@@ -15,6 +15,7 @@ use Illuminate\Mail\Transport\ArrayTransport;
 use Illuminate\Mail\Transport\MailgunTransport;
 use Illuminate\Mail\Transport\MandrillTransport;
 use Illuminate\Mail\Transport\SparkPostTransport;
+use Illuminate\Mail\Transport\SendGridTransport;
 use Swift_SendmailTransport as SendmailTransport;
 
 class TransportManager extends Manager
@@ -151,6 +152,17 @@ class TransportManager extends Manager
 
         return new SparkPostTransport(
             $this->guzzle($config), $config['secret'], Arr::get($config, 'options', [])
+        );
+    }
+
+    /**
+     * Create an instance of the SendGrid Transport driver.
+     */
+    protected function createSendGridDriver()
+    {
+        $config = $this->app['config']->get('services.sendgrid', []);
+        return new SendGridTransport(
+            $this->guzzle($config), $config['secret']
         );
     }
 
